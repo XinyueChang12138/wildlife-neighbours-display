@@ -17,6 +17,10 @@ for (const item of [
   "species.html",
   "help.html",
   "community.html",
+  "activity.html",
+  "story.html",
+  "updates.html",
+  "update.html",
 ])
   await cp(item, path.join(target, item), { recursive: true });
 console.log("Shared park experience synced to " + target);

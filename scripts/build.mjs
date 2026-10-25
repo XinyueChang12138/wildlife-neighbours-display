@@ -9,6 +9,8 @@ for (const file of [
   "shared/ui.js",
   "shared/config.js",
   "shared/data.js",
+  "shared/activities.js",
+  "shared/presentation.js",
 ]) {
   const r = spawnSync(process.execPath, ["--check", file], {
     encoding: "utf8",
@@ -25,7 +27,12 @@ for (const file of [
   "styles.css",
   "shared/mobile.css",
   "vendor/qrcode.js",
-  ...species.map((s) => s.image),
+  ...species.map((s) => s.image).filter((x) => x.startsWith("assets/")),
+  "activity.html",
+  "story.html",
+  "updates.html",
+  "update.html",
+  "assets/neighbours-illustrations.webp",
 ])
   await access(file);
 for (const file of [

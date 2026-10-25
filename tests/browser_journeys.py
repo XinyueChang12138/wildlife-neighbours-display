@@ -40,7 +40,8 @@ with sync_playwright() as p:
  for route in ['index.html','animals.html','species.html?animal=magpie','help.html','community.html']:
   page.goto(base+route);page.locator('[data-selected]').first.wait_for()
   page.keyboard.press('ArrowRight');assert page.locator('.macro-focus').count()==1
-  page.keyboard.press('Escape');page.wait_for_url('**/animals.html' if route.startswith('species') else '**/index.html')
+  before=page.url;page.keyboard.press('ArrowLeft');assert page.url==before
+  if route!='index.html':page.locator('.return-options a').first.click();page.wait_for_url('**/animals.html' if route.startswith('species') else '**/index.html')
  page.goto(base+'species.html?animal=magpie');page.locator('h1').filter(has_text='Australian magpie').wait_for()
  page.locator('[data-selected]').first.wait_for();page.clock.fast_forward(121000);page.wait_for_url('**/index.html')
  print('Three-key focus and idle return passed')

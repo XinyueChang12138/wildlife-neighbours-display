@@ -1,13 +1,16 @@
-# Prototype screenshots
+# Revised prototype screenshots
 
-Screenshots are from the actual local browser implementation, with fictional seeded content.
+Actual browser captures of the revised implementation. Illustration and community content is explicitly fictional. These are not evidence of a production deployment or hands-on hardware testing.
 
-- [Public display home](display-home.png)
-- [Six species](display-species.png)
-- [Injury guidance](display-help.png)
-- [Secondary community action](display-community.png)
-- [Fencepost stories](fencepost-stories.png)
-- [Text / optional-media contribution](fencepost-share.png)
-- [Prototype registration](fencepost-registration.png)
+1. [Revised public-display home](01-public-display-home.png)
+2. [Highlighted three-button navigation](02-highlighted-navigation.png)
+3. [Selectable Return to previous screen](03-return-option.png)
+4. [Local Wildlife Story without a rotation pause/resume control](04-local-story-no-pause.png)
+5. [Meet the Animal quiz, answer and explanation](05-animal-quiz.png)
+6. [Keyboard-accessible habitat pick-and-place game](06-accessible-habitat.png)
+7. [Revised Fencepost home hierarchy](07-fencepost-home.png)
+8. [Sample volunteer opportunity](08-volunteer-opportunity.png)
+9. [Prototype registration](09-prototype-registration.png)
+10. [Sample Community Update](10-community-update.png)
 
-Five species images are deliberately labelled placeholders pending licensed photographs. Official information review remains pending. These screenshots are not evidence of production deployment or hosted backend readiness.
+Regenerate with `python3 scripts/capture-revision.py` while the static prototype runs at port 8050, or set `WN_TEST_BASE` to its development HTTP address. The keyboard tests additionally exercise 1024×768 iPad-sized and 390-pixel phone viewports. The actual keyboard, knob, iPad/cardboard reach and audio environment still need physical testing.

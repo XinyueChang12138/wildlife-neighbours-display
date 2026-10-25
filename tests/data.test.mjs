@@ -143,3 +143,44 @@ test("publishing an outcome completes the activity and disables registration", a
     (await api.outcomes()).some((o) => o.title === "Sample completed task"),
   );
 });
+
+test("new exhibition samples are labelled and additive demo migration preserves work", async () => {
+  const old = api.initialState();
+  old.catalogVersion = 2;
+  old.outcomes = [];
+  old.observations.push({
+    id: "preserve-this",
+    privateRescueLocation: "PRIVATE PRESERVED",
+    status: "pending",
+  });
+  localStorage.setItem("wn-demo-v2", JSON.stringify(old));
+  const feed = await api.stories();
+  assert.equal(feed.length, 6);
+  api.demoLogin();
+  assert.ok(
+    (await api.queue()).observations.some((o) => o.id === "preserve-this"),
+  );
+  const updates = await api.outcomes();
+  assert.equal(updates.length, 4);
+  assert.ok(
+    updates.every(
+      (o) =>
+        o.sample && o.whyItMatters && o.approvedImage && o.noWildlifeHandling,
+    ),
+  );
+  assert.ok(!JSON.stringify(feed).includes("PRIVATE PRESERVED"));
+});
+test("revised mappings, quiz mix and artwork cover the required journeys", async () => {
+  const { config } = await import("../shared/config.js");
+  const { quizzes } = await import("../shared/activities.js");
+  const { artwork } = await import("../shared/ui.js");
+  assert.deepEqual(config.keys, {
+    back: "ArrowLeft",
+    choose: "Enter",
+    next: "ArrowRight",
+  });
+  assert.equal(Object.keys(quizzes).length, 6);
+  assert.ok(Object.values(quizzes).some((q) => q.type === "habitat"));
+  assert.ok(Object.values(quizzes).some((q) => q.type === "match"));
+  assert.equal(Object.keys(artwork).length, 12);
+});

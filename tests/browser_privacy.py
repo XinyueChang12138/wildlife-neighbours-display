@@ -14,13 +14,9 @@ with sync_playwright() as p:
  page.goto(base+'fencepost/index.html#rescue');page.locator('#observation-form').wait_for();page.locator('[name=behaviour]').fill('Possibly trapped');page.locator('[name=description]').fill('Sample welfare report');page.locator('[name=privateRescueLocation]').fill('PRIVATE TEST LOCATION');page.locator('[name=condition]').fill('Not moving');page.locator('[name=safeConsent]').check();page.get_by_role('button',name='Preview submission').click();assert 'PRIVATE TEST LOCATION' not in page.inner_text('main');page.get_by_role('button',name='Send for review',exact=True).click();page.get_by_role('heading',name='Sent for review — not yet public').wait_for();page.goto(base+'index.html');page.locator('.hero').wait_for();assert 'PRIVATE TEST LOCATION' not in page.inner_text('main')
  print('Private welfare report is hidden from preview and public display',flush=True)
  page.goto(base+'community.html');page.locator('[data-qr] svg').first.wait_for();assert '#stories' in page.locator('[data-qr]').first.get_attribute('data-qr');assert '#opportunity/habitat-demo' in page.locator('[data-qr]').nth(1).get_attribute('data-qr')
- page.locator('a.text-link').click();page.locator('dialog[open]').wait_for();page.keyboard.press('Escape');assert not page.locator('dialog[open]').count()
+ page.locator('a.text-link').click();page.locator('dialog[open]').wait_for();page.keyboard.press('ArrowLeft');assert page.locator('dialog[open]').count()==1;page.keyboard.press('ArrowRight');page.keyboard.press('Enter');assert not page.locator('dialog[open]').count()
  print('QR targets and physical Back from phone handoff passed',flush=True)
- # Keyboard-only open the first animal and answer its activity using Next/Choose.
- page.goto(base+'animals.html');page.locator('[data-selected]').wait_for();page.keyboard.press('Enter');page.wait_for_url('**/species.html?animal=brushtail');page.locator('[data-selected]').wait_for()
- for _ in range(15):
-  if page.locator('.macro-focus').evaluate('(e)=>e.tagName')=='SUMMARY':break
-  page.keyboard.press('ArrowRight')
- page.keyboard.press('Enter');page.keyboard.press('ArrowRight');page.keyboard.press('Enter');assert 'Yes.' in page.locator('#learning-result').inner_text()
- print('Species activity completed with only Next and Choose',flush=True)
+ # The revised dedicated keyboard acceptance suite covers the full three-button journey.
+ page.goto(base+'species.html?animal=brushtail');page.locator('.activity-start').click();page.locator('[data-game=answer]').first.click();page.locator('[data-game=check]').click();assert 'mostly nocturnal' in page.locator('.quiz-result').inner_text()
+ print('Species activity and explanation passed',flush=True)
  assert not errors,errors;b.close()
