@@ -14,3 +14,14 @@ Actual browser captures of the revised implementation. Illustration and communit
 10. [Sample Community Update](10-community-update.png)
 
 Regenerate with `python3 scripts/capture-revision.py` while the static prototype runs at port 8050, or set `WN_TEST_BASE` to its development HTTP address. The keyboard tests additionally exercise 1024×768 iPad-sized and 390-pixel phone viewports. The actual keyboard, knob, iPad/cardboard reach and audio environment still need physical testing.
+
+## Accounts, direct comments and writing help
+
+11. [Demonstration login and quick-fill accounts](11-demo-login.png)
+12. [Taylor’s resident activity/profile](12-resident-profile.png)
+13. [Moderator posts awaiting approval](13-moderator-posts.png)
+14. [Reported comments, separate from post review](14-reported-comments.png)
+15. [Original and editable writing suggestion](15-writing-help.png)
+16. [Immediately visible comments and resident controls](16-direct-comments.png)
+
+These accounts and records are fictional exhibition data. The intentionally public credentials in the login screenshot are not production secrets. `scripts/capture-accounts.py` regenerates these six views.

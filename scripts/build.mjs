@@ -11,6 +11,12 @@ for (const file of [
   "shared/data.js",
   "shared/activities.js",
   "shared/presentation.js",
+  "shared/auth.js",
+  "shared/storage.js",
+  "shared/demo-accounts.js",
+  "shared/comment-safety.js",
+  "shared/writer-port.js",
+  "shared/writing.js",
 ]) {
   const r = spawnSync(process.execPath, ["--check", file], {
     encoding: "utf8",

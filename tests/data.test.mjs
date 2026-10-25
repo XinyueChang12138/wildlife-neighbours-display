@@ -21,8 +21,10 @@ globalThis.localStorage = new MemoryStorage();
 globalThis.sessionStorage = new MemoryStorage();
 globalThis.window = new EventTarget();
 const api = await import("../shared/api.js");
-beforeEach(() => {
+beforeEach(async () => {
+  await api.login("moderator@fencepost.demo", "moderator123");
   api.resetDemo();
+  api.logout();
 });
 test("six sample species and conservative opportunity verification", () => {
   assert.equal(sampleStories.length, 6);
@@ -78,8 +80,8 @@ test("moderation requires role, full checks and reason; rejection removes approv
     },
     mediaApproved: false,
   };
-  await assert.rejects(api.moderate(payload), /sign-in/);
-  api.demoLogin();
+  await assert.rejects(api.moderate(payload), /Moderator access/);
+  await api.login("moderator@fencepost.demo", "moderator123");
   await assert.rejects(
     api.moderate({ ...payload, privacyChecks: {} }),
     /privacy/,
@@ -94,18 +96,32 @@ test("moderation requires role, full checks and reason; rejection removes approv
   assert.ok(!(await api.stories()).some((s) => s.sourceObservationId === r.id));
   const q = await api.queue();
   assert.equal(q.records.length, 2);
-  assert.equal(q.records[0].moderatorId, "demo-moderator");
+  assert.equal(q.records[0].moderatorId, "wildlife-moderator");
 });
-test("comments are moderated and only accepted on public stories", async () => {
-  await api.addComment(sampleStories[0].id, "A quiet encounter.");
-  assert.equal((await api.comments(sampleStories[0].id)).length, 0);
-  api.demoLogin();
-  let q = await api.queue();
-  await api.moderateComment(q.comments[0].id, "approved");
-  assert.equal((await api.comments(sampleStories[0].id)).length, 1);
-  await api.reportComment(q.comments[0].id, "Please review");
-  await api.moderateComment(q.comments[0].id, "removed");
-  assert.equal((await api.comments(sampleStories[0].id)).length, 0);
+test("comments publish immediately for signed-in users and retain author ownership", async () => {
+  await assert.rejects(
+    api.addComment(sampleStories[0].id, "A quiet encounter."),
+    /Sign in/,
+  );
+  await api.login("resident@fencepost.demo", "resident123");
+  const before = (await api.comments(sampleStories[0].id)).length;
+  const c = await api.addComment(sampleStories[0].id, "A quiet encounter.");
+  assert.equal(c.status, "visible");
+  assert.equal((await api.comments(sampleStories[0].id)).length, before + 1);
+  await api.editComment(c.id, "I watched quietly from the path.");
+  assert.ok(
+    (await api.comments(sampleStories[0].id)).some(
+      (x) => x.body === "I watched quietly from the path.",
+    ),
+  );
+  await assert.rejects(
+    api.editComment("comment-neighbour-demo", "Changed by someone else."),
+    /own/,
+  );
+  await api.deleteComment(c.id);
+  assert.ok(
+    !(await api.comments(sampleStories[0].id)).some((x) => x.id === c.id),
+  );
   await assert.rejects(
     api.addComment("private-id", "Not public"),
     /unavailable/,
@@ -123,7 +139,7 @@ test("broad areas and approximate time are constrained", () => {
   );
 });
 test("publishing an outcome completes the activity and disables registration", async () => {
-  api.demoLogin();
+  await api.login("moderator@fencepost.demo", "moderator123");
   await api.saveOutcome({
     opportunityId: "habitat-demo",
     title: "Sample completed task",
@@ -156,7 +172,7 @@ test("new exhibition samples are labelled and additive demo migration preserves 
   localStorage.setItem("wn-demo-v2", JSON.stringify(old));
   const feed = await api.stories();
   assert.equal(feed.length, 6);
-  api.demoLogin();
+  await api.login("moderator@fencepost.demo", "moderator123");
   assert.ok(
     (await api.queue()).observations.some((o) => o.id === "preserve-this"),
   );
