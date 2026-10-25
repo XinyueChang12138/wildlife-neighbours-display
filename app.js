@@ -1,130 +1,82 @@
 const stories = [
-  {
-    image: "assets/ringtail-shorncliffe-night.jpg",
-    alt: "Possums sheltering beneath a roof at night",
-    author: "@mel_k",
-    time: "2 Sep · 9:14pm",
-    species: "Ringtail",
-    title: "The one in the jacaranda",
-    text: "Heard the gutter go and there she was, just sitting in the jacaranda looking at me while I filmed. Didn't move the whole time."
-  },
-  {
-    image: "assets/brushtail-peeking.jpg",
-    alt: "A brushtail possum peeking around a tree",
-    author: "@dan_h",
-    time: "5 Sep · 10:30pm",
-    species: "Brushtail",
-    title: "Straight up the old trunk",
-    text: "Pretty sure this is a different one, much bigger. Came over the back fence and went straight up the trunk without stopping."
-  },
-  {
-    image: "assets/ringtail-brisbane-park.jpg",
-    alt: "A ringtail possum watching from a branch",
-    author: "@aroha_t",
-    time: "8 Sep · 8:05pm",
-    species: "Ringtail",
-    title: "Two visitors after dark",
-    text: "Two of them this time. One stayed right up the top and kept making that clicking noise the whole time; I couldn't get both of them in frame."
-  },
-  {
-    image: "assets/brushtail-trunk.jpg",
-    alt: "A brushtail possum holding onto a tree trunk",
-    author: "@sione_f",
-    time: "10 Sep · 2:18am",
-    species: "Brushtail",
-    title: "The roof visitor returns",
-    text: "2am, roof, again. Caught him coming down the drainpipe on the side of the house. Absolutely unbothered by me standing there in my dressing gown."
-  },
-  {
-    image: "assets/ringtail-rain.jpg",
-    alt: "A ringtail possum among green leaves",
-    author: "@mel_k",
-    time: "12 Sep · 9:47pm",
-    species: "Ringtail",
-    title: "Along the top of the fence",
-    text: "Back again tonight. Went along the top of the fence, then sat in the jacaranda for ages pulling the flowers off the end of a branch."
-  },
-  {
-    image: "assets/brushtail-palm.jpg",
-    alt: "Possums resting together among palm branches",
-    author: "@mel_k",
-    time: "13 Sep · 10:06pm",
-    species: "Ringtail",
-    title: "A familiar route through the trees",
-    text: "Came along the fence about eleven, then used the same connected branches neighbours had noticed earlier in the week."
-  }
+  { image: 'assets/brushtail-peeking.jpg', alt: 'A brushtail possum peeking around a tree', title: 'A quiet visitor after dark.', species: 'Possible brushtail possum', text: 'A resident noticed a possible brushtail possum resting beside a tree near the local park around 8:30 pm.', area: 'General park area only', time: 'Around 8:30 pm', fact: 'Brushtail possums are mostly active at night.', source: 'https://australian.museum/learn/animals/mammals/common-brushtail-possum/' },
+  { image: 'assets/ringtail-brisbane-park.jpg', alt: 'A ringtail possum watching from a tree', title: 'An evening in the branches.', species: 'Possible common ringtail possum', text: 'A neighbour noticed a possible ringtail possum sitting among branches near a local green space around 8 pm.', area: 'Local green space only', time: 'Around 8 pm', fact: 'Ringtail possums use their prehensile tails to grip branches.', source: 'https://australian.museum/learn/animals/mammals/common-ringtail-possum/' },
+  { image: 'assets/brushtail-trunk.jpg', alt: 'A brushtail possum holding onto a tree trunk', title: 'A night-time climber.', species: 'Possible brushtail possum', text: 'A resident noticed a possible brushtail possum climbing a tree in the neighbourhood late at night.', area: 'Neighbourhood trees only', time: 'Late at night', fact: 'Brushtail possums use sharp claws to climb trees.', source: 'https://australian.museum/learn/animals/mammals/common-brushtail-possum/' }
 ];
-
-let storyIndex = 0;
 const $ = (selector) => document.querySelector(selector);
-
-function showToast(message) {
-  const toast = $("#toast");
-  if (!toast) return;
-  toast.textContent = message;
-  toast.classList.add("show");
-  window.setTimeout(() => toast.classList.remove("show"), 2100);
-}
-
+let storyIndex = 0;
+let paused = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+let rotationTimer;
 function showStory(index) {
-  const story = stories[index];
-  if (!$("#storyImage")) return;
-  $("#storyImage").src = story.image;
-  $("#storyImage").alt = story.alt;
-  $("#storyAuthor").textContent = story.author;
-  $("#storyTime").textContent = story.time;
-  $("#storySpecies").textContent = story.species.toUpperCase();
-  $("#storyTitle").textContent = story.title;
-  $("#storyText").textContent = story.text;
-  $("#storyNumber").textContent = `${String(index + 1).padStart(2, "0")} / ${String(stories.length).padStart(2, "0")}`;
+  if (!$('#storyImage')) return;
+  window.speechSynthesis?.cancel();
+  if ($('#audioStatus')) $('#audioStatus').textContent = '';
+  const s = stories[index];
+  $('#storyImage').src = s.image;
+  $('#storyImage').alt = s.alt;
+  for (const [id, field] of Object.entries({storyTitle:'title',storySpecies:'species',storyText:'text',storyArea:'area',storyTime:'time',storyFact:'fact'})) $(`#${id}`).textContent = s[field];
+  $('#factSource').href = s.source;
+  $('#storyNumber').textContent = `${String(index + 1).padStart(2,'0')} / 03`;
 }
+function scheduleRotation() {
+  clearInterval(rotationTimer);
+  if (!paused && $('#storyImage')) rotationTimer = setInterval(() => {
+    if (!document.hidden) { storyIndex = (storyIndex + 1) % stories.length; showStory(storyIndex); }
+  }, 20000);
+}
+function updatePause() {
+  if (!$('#pauseStory')) return;
+  $('#pauseStory').textContent = paused ? 'Resume rotation' : 'Pause rotation';
+  $('#pauseStory').setAttribute('aria-pressed', String(paused));
+  scheduleRotation();
+}
+$('#nextStory')?.addEventListener('click', () => { storyIndex = (storyIndex + 1) % stories.length; showStory(storyIndex); scheduleRotation(); });
+$('#pauseStory')?.addEventListener('click', () => { paused = !paused; updatePause(); });
+updatePause();
 
-$("#nextStory")?.addEventListener("click", () => {
-  storyIndex = (storyIndex + 1) % stories.length;
-  showStory(storyIndex);
+if ($('#animalName')) {
+  const ringtail = new URLSearchParams(location.search).get('animal') === 'ringtail';
+  if (ringtail) {
+    $('#animalName').textContent = 'Common ringtail possum';
+    $('#animalImage').src = 'assets/ringtail-brisbane-park.jpg';
+    $('#animalImage').alt = 'Ringtail possum in a tree';
+    $('#animalIntro').textContent = 'Look for a curled tail. Watch quietly from a distance.';
+    $('#speciesSource').href = 'https://australian.museum/learn/animals/mammals/common-ringtail-possum/';
+    $('#familyPrompt').textContent = 'What makes a ringtail’s tail so useful?';
+    $('.answers').innerHTML = '<button id="revealFact">Reveal a behaviour fact</button>';
+    $('#revealFact').addEventListener('click', () => { $('#familyFeedback').textContent = 'Its prehensile tail grips branches as it climbs.'; });
+  } else {
+    document.querySelectorAll('[data-choice]').forEach(button => button.addEventListener('click', () => {
+      $('#familyFeedback').textContent = button.dataset.choice === 'safe' ? 'Yes. Stay back, keep pets away and let it move on.' : 'Try giving it space. Human food can harm wildlife.';
+    }));
+  }
+}
+const currentPage = location.pathname.split('/').pop() || 'index.html';
+document.querySelectorAll('.bottom-nav a').forEach(link => {
+  if (link.getAttribute('href') === currentPage || (currentPage === 'species.html' && link.getAttribute('href') === 'animals.html')) link.setAttribute('aria-current','page');
 });
+// Touch, keyboard and pointer activity restart the two-minute kiosk timeout.
+let idleTimer;
+function resetIdle() {
+  clearTimeout(idleTimer);
+  idleTimer = setTimeout(() => {
+    if (currentPage !== 'index.html') location.replace('index.html');
+    else { storyIndex = 0; showStory(0); paused = window.matchMedia('(prefers-reduced-motion: reduce)').matches; updatePause(); }
+  }, 120000);
+}
+['pointerdown','pointermove','keydown','touchstart','scroll'].forEach(event => window.addEventListener(event, resetIdle, {passive:true}));
+resetIdle();
 
-$("#languageButton")?.addEventListener("click", () => {
-  showToast("Language: English · 中文 · العربية");
-});
-
-document.querySelectorAll("[data-answer]").forEach((button) => {
-  button.addEventListener("click", () => {
-    const feedback = $("#quizFeedback");
-    if (feedback) feedback.textContent = button.dataset.answer === "correct"
-      ? "Correct! Possums use their hand-like feet to climb."
-      : "Good try. Look for five long, hand-like toes.";
-  });
-});
-
-document.querySelectorAll("[data-animal-fact]").forEach((button) => {
-  button.addEventListener("click", () => showToast(button.dataset.animalFact));
-});
-
-document.querySelectorAll("[data-sound]").forEach((button) => {
-  button.addEventListener("click", () => {
-    if ("speechSynthesis" in window) {
-      speechSynthesis.cancel();
-      speechSynthesis.speak(new SpeechSynthesisUtterance(button.dataset.sound));
-    }
-    showToast("Playing wildlife sound clue");
-  });
-});
-
-document.querySelectorAll(".sound-card audio").forEach((audio) => {
-  audio.addEventListener("play", () => {
-    document.querySelectorAll(".sound-card audio").forEach((other) => {
-      if (other !== audio) other.pause();
-    });
-  });
-});
-
-document.querySelectorAll("[data-reveal]").forEach((button) => {
-  button.addEventListener("click", () => {
-    const answer = button.parentElement.querySelector(".sound-answer");
-    if (!answer) return;
-    answer.textContent = button.dataset.reveal;
-    answer.classList.add("revealed");
-    button.textContent = "Answer revealed";
-  });
+$('#listenStory')?.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) {
+    $('#audioStatus').textContent = 'Audio is unavailable in this browser. Read the story above.';
+    return;
+  }
+  window.speechSynthesis.cancel();
+  paused = true;
+  updatePause();
+  const story = stories[storyIndex];
+  const utterance = new SpeechSynthesisUtterance(`${story.text} Wildlife fact: ${story.fact} Give wildlife space. Never feed, touch or follow animals.`);
+  utterance.onerror = () => { $('#audioStatus').textContent = 'Audio could not play. Read the story above.'; };
+  window.speechSynthesis.speak(utterance);
 });
