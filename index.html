@@ -1,4 +1,41 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Home story — Wildlife Neighbours</title><link rel="stylesheet" href="styles.css"></head><body><header class="site-header"><a class="brand" href="index.html">Wildlife<br><strong>Neighbours<span> ●</span></strong></a><span class="header-note">Small encounters. Shared places.</span><span class="prototype">Community display · Prototype</span></header><main><section class="intro"><p class="eyebrow">01 / A moment from the neighbourhood</p><span>Look. Learn. Leave space.</span></section>
-<article class="hero" aria-label="Rotating neighbourhood observation"><div class="hero-photo"><img id="storyImage" src="assets/brushtail-peeking.jpg" alt="A brushtail possum peeking around a tree"><span class="photo-note">Illustrative photograph</span></div><div class="story-copy"><p class="label">Neighbour observation <span>· Sample post</span></p><h1 id="storyTitle">A quiet visitor<br>after dark.</h1><p class="species" id="storySpecies">Possible brushtail possum</p><p id="storyText">A resident noticed a possible brushtail possum resting beside a tree near the local park around 8:30 pm.</p><dl class="story-meta"><div><dt>Public location</dt><dd id="storyArea">General park area only</dd></div><div><dt>Approximate time</dt><dd id="storyTime">Around 8:30 pm</dd></div></dl><aside class="fact"><span class="eyebrow">Wildlife fact</span><p id="storyFact">Brushtail possums are mostly active at night.</p><a id="factSource" href="https://australian.museum/learn/animals/mammals/common-brushtail-possum/" target="_blank" rel="noreferrer">Source: Australian Museum ↗</a></aside><button id="listenStory" class="listen-button" type="button">Listen to this story</button><p id="audioStatus" class="audio-status" role="status"></p><div class="story-controls"><button id="pauseStory" aria-pressed="false">Pause rotation</button><span id="storyNumber">01 / 03</span><button id="nextStory">Next story →</button></div></div></article>
-<section class="secondary"><a href="animals.html"><span class="eyebrow">03 / Explore together</span><h2>Meet your wild neighbours <span>→</span></h2><p>One animal. One small discovery together.</p></a><a href="community.html"><span class="eyebrow">04 / Read, share or volunteer</span><h2>A little care goes a long way <span>→</span></h2><p>Share an observation or explore a community action.</p></a></section><p class="privacy-note">Sample stories adapted from prototype posts. Intended publication: human review before display; responsible reviewer to be confirmed. Broad areas only.</p></main><nav class="bottom-nav" aria-label="Main navigation"><a href="index.html">Home story</a><a href="help.html">Is it hurt?</a><a href="animals.html">Meet the animal</a><a href="community.html">Read, share or volunteer</a></nav><footer><span>Give wildlife space. Never feed, touch or follow animals.</span> <a href="help.html">Is it hurt? What should I do? →</a></footer><script src="app.js"></script></body></html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Wildlife Neighbours</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="icon" href="assets/placeholder.svg" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="index.html"
+        >Wildlife<br /><strong>Neighbours<span> ●</span></strong></a
+      ><span class="header-note">Small encounters. Shared places.</span
+      ><span class="prototype">Community display · Prototype</span>
+    </header>
+    <main aria-label="Wildlife Neighbours">
+      <p>Loading…</p>
+      <noscript
+        >Enable JavaScript to browse the interactive prototype.</noscript
+      >
+    </main>
+    <div class="kiosk-dock">
+      <nav class="bottom-nav" aria-label="Main navigation">
+        <a href="index.html">Home story</a><a href="help.html">Is it hurt?</a
+        ><a href="animals.html">Meet the animal</a
+        ><a href="community.html">Read, share or volunteer</a>
+      </nav>
+      <div class="control-guide" aria-label="Physical controls">
+        <button data-control="back">◀ Back</button
+        ><button data-control="choose">● Choose</button
+        ><button data-control="next">▶ Next</button
+        ><span>Turn the knob to adjust volume.</span
+        ><span id="volume-state" role="status" aria-live="polite"></span>
+      </div>
+      <footer>Observe safely. Never approach, feed or handle wildlife.</footer>
+    </div>
+    <script src="vendor/qrcode.js"></script>
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
