@@ -18,7 +18,6 @@ globalThis.window = new EventTarget();
 const api = await import("../shared/api.js");
 const auth = await import("../shared/auth.js");
 const { checkComment } = await import("../shared/comment-safety.js");
-const writing = await import("../shared/writing.js");
 const resident = () => api.login("resident@fencepost.demo", "resident123");
 const moderator = () => api.login("moderator@fencepost.demo", "moderator123");
 beforeEach(async () => {
@@ -57,7 +56,6 @@ test("resident cannot read queues, private rescue fields or other accounts’ re
   assert.ok(!JSON.stringify(own).includes("DEMO PRIVATE LOCATION"));
   assert.equal(api.registrationList().length, 1);
   assert.equal((await api.savedStories()).length, 1);
-  assert.equal(api.writingDraft().status, "draft");
   assert.equal(
     (await api.stories()).some(
       (s) => s.sourceObservationId === "taylor-pending-demo",
@@ -169,36 +167,6 @@ test("demo reset requires a moderator, restores records and keeps the authentica
   await resident();
   assert.equal(api.registrationList().length, 1);
 });
-test("writer port reformats only an explicit draft and rejects private information or invented details", async () => {
-  const original = "saw a possible possum in the park";
-  const result = await writing.demoWritingHelp({ text: original });
-  assert.equal(result.tidied_story, "Saw a possible possum in the park.");
-  assert.equal(
-    writing.validatedSuggestion(result, original).suggestion,
-    result.tidied_story,
-  );
-  assert.equal(original, "saw a possible possum in the park");
-  assert.throws(
-    () => writing.validateWritingInput("At 12 Acacia Street"),
-    /Remove exact/,
-  );
-  assert.throws(
-    () =>
-      writing.validatedSuggestion(
-        { tidied_story: "A definite kangaroo ate rare flowers." },
-        original,
-      ),
-    /unavailable/,
-  );
-  const controller = new AbortController();
-  const pending = writing.demoWritingHelp({
-    text: original,
-    signal: controller.signal,
-  });
-  controller.abort();
-  await assert.rejects(pending, { name: "AbortError" });
-});
-
 test("dismissing a report records the reviewer and leaves the comment visible", async () => {
   await resident();
   await api.reportComment("comment-neighbour-demo", "Other concern");
@@ -216,4 +184,25 @@ test("dismissing a report records the reviewer and leaves the comment visible", 
       (c) => c.id === "comment-neighbour-demo",
     ),
   );
+});
+
+test("local upgrade removes retired draft metadata without changing community records or the session", async () => {
+  await resident();
+  const saved = api.initialState();
+  saved.drafts = {
+    old: { original: "private draft", description: "retired suggestion" },
+  };
+  saved.observations[0].aiAssisted = true;
+  saved.observations[1].ai_assisted = false;
+  const expected = structuredClone(saved);
+  delete expected.drafts;
+  delete expected.observations[0].aiAssisted;
+  delete expected.observations[1].ai_assisted;
+  const session = localStorage.getItem("wn-demo-session");
+  localStorage.setItem("wn-demo-v2", JSON.stringify(saved));
+  await api.stories();
+  assert.deepEqual(JSON.parse(localStorage.getItem("wn-demo-v2")), expected);
+  assert.equal(localStorage.getItem("wn-demo-session"), session);
+  await api.stories();
+  assert.deepEqual(JSON.parse(localStorage.getItem("wn-demo-v2")), expected);
 });

@@ -1,4 +1,4 @@
-"""Account, direct-comment, reporting and writing-help exhibition journeys."""
+"""Account, direct-comment, reporting and manual-observation exhibition journeys."""
 import os,json
 from playwright.sync_api import sync_playwright
 BASE=os.environ.get('WN_TEST_BASE','http://127.0.0.1:8080/')
@@ -19,10 +19,9 @@ with sync_playwright() as p:
  page.locator('#comment-form [name=body]').fill('Find the animal at 12 Acacia Street');page.get_by_role('button',name='Post comment',exact=True).click();assert 'Remove exact addresses' in page.locator('#comment-validation').inner_text()
  target=page.locator('#comment-comment-neighbour-demo');assert not target.get_by_role('button',name='Edit',exact=True).count();target.get_by_role('button',name='Report',exact=True).click();page.locator('#report-form [name=reason]').select_option('Other concern');page.get_by_role('button',name='Send report',exact=True).click();page.get_by_text('Thanks for letting us know.',exact=False).wait_for();assert page.locator('#comment-comment-neighbour-demo').count()==1
  print('Immediate comments, own edit/delete, validation and report-without-hiding passed',flush=True)
- page.goto(BASE+'fencepost/index.html#share');page.locator('[name=behaviour]').fill('Resting in a tree');original='saw a possible possum resting in the park';page.locator('[name=description]').fill(original);page.get_by_role('button',name='Ask AI for writing help',exact=True).click();assert page.locator('[name=description]').input_value()==original
- page.locator('#writer-consent').check();page.get_by_role('button',name='Prepare writing suggestion',exact=True).click();page.locator('#writer-suggestion').wait_for();assert page.locator('#writer-original').input_value()==original;page.locator('#writer-suggestion').fill('I noticed a possible possum resting quietly in the park.');page.locator('#writer-confirm').check();page.get_by_role('button',name='Use suggestion',exact=True).click();assert 'I noticed' in page.locator('[name=description]').input_value();page.get_by_role('button',name='Undo AI suggestion / restore original').click();assert page.locator('[name=description]').input_value()==original
+ page.goto(BASE+'fencepost/index.html#share');page.locator('[name=behaviour]').fill('Resting in a tree');original='saw a possible possum resting in the park';page.locator('[name=description]').fill(original)
  page.locator('[name=safeConsent]').check();page.get_by_role('button',name='Preview submission',exact=True).click();page.get_by_role('button',name='Send for review',exact=True).click();page.get_by_role('heading',name='Sent for review — not yet public',exact=True).wait_for()
- print('Writer comparison, editable suggestion, explicit apply, undo and manual post submission passed',flush=True)
+ print('Manual text-only observation preview and submission passed',flush=True)
  login(page,'moderator');page.goto(BASE+'fencepost/index.html#moderator/pending');page.get_by_role('heading',name='Posts awaiting approval',exact=True).wait_for();form=page.locator('.moderation-form').filter(has=page.locator('textarea[name=publicText]',has_text=original));form.locator('xpath=..').locator('summary').click()
  for key in ['face','house','plate','location','welfare']:form.locator('[name='+key+']').check()
  form.locator('[name=reason]').fill('Human privacy review completed.');form.get_by_role('button',name='Approve and publish',exact=True).click();page.get_by_text('Moderation action recorded.',exact=True).wait_for();page.goto(BASE+'index.html');page.get_by_text(original,exact=True).wait_for()

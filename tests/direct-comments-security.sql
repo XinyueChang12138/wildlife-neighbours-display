@@ -1,4 +1,4 @@
--- Run in a disposable database with migrations 001, 003, 004 and sample stories applied.
+-- Run in a disposable database with migrations 001, 003, 004, 005 and sample stories applied.
 begin;
 insert into auth.users(id,raw_user_meta_data) values('aaaaaaaa-aaaa-4aaa-aaaa-aaaaaaaaaaaa','{"display_name":"Test resident"}'),('bbbbbbbb-bbbb-4bbb-bbbb-bbbbbbbbbbbb','{"display_name":"Other resident"}'),('cccccccc-cccc-4ccc-cccc-cccccccccccc','{"display_name":"Test moderator"}');
 insert into public.moderators values('cccccccc-cccc-4ccc-cccc-cccccccccccc','Test wildlife moderator');
