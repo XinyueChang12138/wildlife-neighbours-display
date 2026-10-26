@@ -7,7 +7,7 @@ Actual browser captures of the revised implementation. Illustration and communit
 3. [Selectable Return to previous screen](03-return-option.png)
 4. [Local Wildlife Story without a rotation pause/resume control](04-local-story-no-pause.png)
 5. [Meet the Animal quiz, answer and explanation](05-animal-quiz.png)
-6. [Keyboard-accessible habitat pick-and-place game](06-accessible-habitat.png)
+6. [Multiple-choice answer cards and three-button focus](06-multiple-choice.png)
 7. [Revised Fencepost home hierarchy](07-fencepost-home.png)
 8. [Sample volunteer opportunity](08-volunteer-opportunity.png)
 9. [Prototype registration](09-prototype-registration.png)
@@ -25,3 +25,12 @@ Regenerate with `python3 scripts/capture-revision.py` while the static prototype
 16. [Immediately visible comments and resident controls](16-direct-comments.png)
 
 These accounts and records are fictional exhibition data. The intentionally public credentials in the login screenshot are not production secrets. `scripts/capture-accounts.py` regenerates these six views.
+
+## Multiple-choice quiz correction
+
+Screenshots 5 and 6 now show the replacement quiz, rather than the removed games.
+
+17. [Three-question completion and review controls](17-quiz-complete.png)
+18. [Responsive quiz on Fencepost](18-quiz-mobile.png)
+
+Regenerate only these quiz views with `scripts/capture-quiz.py`.

@@ -186,7 +186,7 @@ test("new exhibition samples are labelled and additive demo migration preserves 
   );
   assert.ok(!JSON.stringify(feed).includes("PRIVATE PRESERVED"));
 });
-test("revised mappings, quiz mix and artwork cover the required journeys", async () => {
+test("revised mappings, multiple-choice quizzes and artwork cover the required journeys", async () => {
   const { config } = await import("../shared/config.js");
   const { quizzes } = await import("../shared/activities.js");
   const { artwork } = await import("../shared/ui.js");
@@ -196,7 +196,6 @@ test("revised mappings, quiz mix and artwork cover the required journeys", async
     next: "ArrowRight",
   });
   assert.equal(Object.keys(quizzes).length, 6);
-  assert.ok(Object.values(quizzes).some((q) => q.type === "habitat"));
-  assert.ok(Object.values(quizzes).some((q) => q.type === "match"));
+  assert.ok(Object.values(quizzes).every((questions) => questions.length === 3));
   assert.equal(Object.keys(artwork).length, 12);
 });

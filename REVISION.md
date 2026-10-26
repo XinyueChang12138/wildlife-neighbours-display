@@ -6,9 +6,9 @@ These requirements supersede the earlier control and carousel descriptions. Rese
 
 There are exactly three physical navigation controls: Back (ArrowLeft), Choose (Enter) and Next (ArrowRight). Back and Next cycle the available focus options in opposite directions, wrapping at either end. Neither directional control directly changes a story or leaves the screen. Choose activates the highlighted item, answer, story control or destination. Mapping is centralised in `shared/config.js`.
 
-Every secondary display route starts with selectable “← Return to previous screen” and “⌂ Return to home” links. Source/phone handoff panels also contain Return and Home options. The persistent guide reads “Back: previous option · Choose: select · Next: next option · Turn knob: volume”. A double focus outline/shadow identifies the selected item and a separate persistent “Selected” text line names it; focus decoration does not change item geometry or cover guidance.
+Except for the quiz (which provides its own selectable Return), every secondary display route starts with selectable “← Return to previous screen” and “⌂ Return to home” links. Source/phone handoff panels also contain Return and Home options. The persistent guide reads “Back: previous option · Choose: select · Next: next option · Turn knob: volume”. A double focus outline/shadow identifies the selected item and a separate persistent “Selected” text line names it; focus decoration does not change item geometry or cover guidance.
 
-The knob controls volume only. Default mode is OS volume. Software mode receives the configurable `wn-knob` event with a signed delta and displays the temporary volume state. It does not add navigation keys. Keyboard selection scrolls into view; pointer selection does not move an item under a drag gesture.
+The knob controls volume only. Default mode is OS volume. Software mode receives the configurable `wn-knob` event with a signed delta and displays the temporary volume state. It does not add navigation keys. Keyboard selection scrolls into view; pointer selection does not scroll the selected control unexpectedly.
 
 ## Story reading
 
@@ -22,9 +22,7 @@ One original 12-panel illustrated atlas covers all six species, native planting,
 
 ## Learning
 
-Each species page links to one short activity. There are multiple-choice questions, responsible-response questions, habitat/clue matching, and a habitat planning game. Answers produce an explanation, Try again, Learn more and Return to animal page.
-
-The habitat game uses the same item/destination controls for all inputs: Choose picks up an item, Back/Next select a destination, Choose places it; a placed item can be selected again to move it. Live status names the item and destination. “Choose item → Choose destination” is the non-drag alternative. Native pointer dragging also works, including when the page must scroll. No activity scores sightings, rewards approaching animals or exposes exact locations.
+Each species page links to a reusable three-question multiple-choice quiz. All six animals have original questions, three choices each, explicit correct/incorrect explanations, retry, completion and answer review. No matching, habitat placement, sound games or dragging remain. Physical navigation wraps only through the current quiz answers/actions and Return. See QUIZ-IMPLEMENTATION.md for state, sources and validation.
 
 ## Fencepost hierarchy and community care
 
@@ -40,6 +38,6 @@ No submissions, registrations or private legacy records are deleted. Existing br
 
 ## Verification and limits
 
-Automated tests cover the new mappings and wrap behaviour, Return activation, idle/reduced-motion/full-story behaviour, all quiz types, keyboard pick/place/reposition, native pointer dragging, four sample updates, mobile hierarchy, registration and existing privacy workflows. Screenshots in `docs/screenshots` cover the ten requested views. PostgreSQL tests check the additive upgrade and retained private records; both static validation and the Next production build are run.
+Automated tests cover the new mappings and wrap behaviour, Return activation, idle/reduced-motion/full-story behaviour, all six multiple-choice quizzes, question retry, answer review, state resets, four sample updates, mobile hierarchy, registration and existing privacy workflows. Screenshots in `docs/screenshots` cover the ten requested views. PostgreSQL tests check the additive upgrade and retained private records; both static validation and the Next production build are run.
 
 The cardboard iPad, actual macro keyboard, knob/speakers, outdoor glare and physical reach still require hands-on testing. Browser checks emulate iPad dimensions but are not hardware certification. Hosted Supabase Auth/Storage remains unconfigured. Official wildlife facts and contacts still need the responsible organisation’s review; the UI does not mislabel unreviewed reference information as verified. Those external limitations are not hidden by sample content.
