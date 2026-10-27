@@ -1,4 +1,4 @@
-import { readFile, access } from "node:fs/promises";
+import { readFile, access, readdir, rm, mkdir, cp } from "node:fs/promises";
 import { species } from "../shared/data.js";
 import { spawnSync } from "node:child_process";
 for (const file of [
@@ -58,6 +58,15 @@ for (const file of [
   if (!s.includes('data-control="choose"') || !s.includes('type="module"'))
     throw Error(file + " missing public controls or script");
 }
-console.log(
-  "Static build validation passed. Deploy this repository as-is; no generated build directory is required.",
-);
+// Publish only website files, excluding repository metadata, tests and secrets.
+await rm("public", { recursive: true, force: true });
+await mkdir("public");
+for (const entry of await readdir(".", { withFileTypes: true })) {
+  if (entry.isFile() && /\.(html|css|js)$/.test(entry.name)) {
+    await cp(entry.name, `public/${entry.name}`);
+  }
+}
+for (const directory of ["assets", "shared", "vendor", "fencepost"]) {
+  await cp(directory, `public/${directory}`, { recursive: true });
+}
+console.log("Static build validation passed. Website generated in public/.");

@@ -78,6 +78,8 @@ See [REVISION.md](REVISION.md) for the full current interaction contract and [IM
 
 ## Deployment and synchronisation
 
+**Display / Vercel:** deploy `design-preview` with the repository root as Root Directory and Framework Preset **Other**. `npm run build` validates the website and generates a populated `public/` output directory, configured in `vercel.json`. Remove conflicting project overrides and redeploy the latest commit without the previous build cache. This static deployment includes the Fencepost companion at `/fencepost/`.
+
 **Display / GitHub Pages:** enable Pages for a selected branch or deployment workflow after reviewing `design-preview`; no build output directory is needed. Do not change the production Pages branch simply to review this work. All asset/module paths support a repository subpath. Keep `vendor/` and `shared/` in the published files.
 
 **Fencepost / Vercel:** deploy `wildlife-neighbours-preview` as a preview branch with `web/` as Root Directory, `npm run build`, and the existing Next.js framework setting. The original API project is unchanged and does not need deployment for this isolated park flow. New park URLs are not claimed to exist on the production domain until that branch is deployed.
