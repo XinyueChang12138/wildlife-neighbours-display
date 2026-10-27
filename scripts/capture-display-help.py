@@ -1,4 +1,4 @@
-"""Capture only the public help box and its offline result."""
+"""Capture only the public help box and its predefined result."""
 import os
 from pathlib import Path
 from playwright.sync_api import sync_playwright
@@ -9,4 +9,4 @@ with sync_playwright() as p:
  page.goto(BASE+'help.html');page.locator('#wildlife-description').wait_for();page.screenshot(path=str(out/'19-display-help.png'),full_page=True)
  page.locator('[data-help-prompt="1"]').click();page.locator('[data-help-action=ask]').click();page.locator('.wildlife-response').wait_for();page.screenshot(path=str(out/'20-display-help-response.png'),full_page=True)
  b.close()
-print('Captured public help entry and offline result')
+print('Captured Wildlife Help entry and predefined result')

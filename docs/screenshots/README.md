@@ -35,9 +35,17 @@ Screenshots 5 and 6 now show the replacement quiz, rather than the removed games
 
 Regenerate only these quiz views with `scripts/capture-quiz.py`.
 
-## Public-display observation guidance
+## Public-display Wildlife Help
 
 19. [Description box and starter prompts](19-display-help.png)
-20. [Explicit offline result with safety guidance](20-display-help-response.png)
+20. [Predefined prototype response with safety guidance](20-display-help-response.png)
 
 Regenerate these two views with `scripts/capture-display-help.py`.
+
+## Wildlife assistance and human emergencies
+
+21. [Separate assistance contact options](21-assistance-contacts.png)
+22. [RSPCA Queensland confirmation](22-wildlife-call-confirmation.png)
+23. [Triple Zero confirmation and emergency-only warning](23-emergency-call-confirmation.png)
+
+Regenerate these views with `scripts/capture-contacts.py`; no telephone links are activated.
