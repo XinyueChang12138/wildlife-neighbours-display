@@ -34,3 +34,10 @@ Screenshots 5 and 6 now show the replacement quiz, rather than the removed games
 18. [Responsive quiz on Fencepost](18-quiz-mobile.png)
 
 Regenerate only these quiz views with `scripts/capture-quiz.py`.
+
+## Public-display observation guidance
+
+19. [Description box and starter prompts](19-display-help.png)
+20. [Explicit offline result with safety guidance](20-display-help-response.png)
+
+Regenerate these two views with `scripts/capture-display-help.py`.
